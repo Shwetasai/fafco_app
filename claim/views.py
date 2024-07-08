@@ -24,8 +24,8 @@ class ClaimListCreateAPIView(APIView):
 class ClaimRetrieveUpdateAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_object(self, pk):
-        return get_object_or_404(Claim, pk=pk, dealer=self.request.user)
+    '''def get_object(self, pk):
+        return get_object_or_404(Claim, pk=pk, dealer=self.request.user)'''
 
     def get(self, request, pk, *args, **kwargs):
         claim = self.get_object(pk)
@@ -51,9 +51,9 @@ class ClaimDocumentUploadAPIView(APIView):
     def get_claim(self, claim_pk):
         return get_object_or_404(Claim, pk=claim_pk, dealer=self.request.user)
 
-    def get_document(self, claim_pk, doc_pk):
+    '''def get_document(self, claim_pk, doc_pk):
         claim = self.get_claim(claim_pk)
-        return get_object_or_404(ClaimDocument, pk=doc_pk, claim=claim)
+        return get_object_or_404(ClaimDocument, pk=doc_pk, claim=claim)'''
     def post(self, request, pk, *args, **kwargs):
         claim = get_object_or_404(Claim, pk=pk, dealer=request.user)
         serializer = ClaimDocumentSerializer(data=request.data)

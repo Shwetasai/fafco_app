@@ -19,11 +19,11 @@ class PartListCreateAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PartDetailAPIView(APIView):
-    def get_object(self, part_id):
+    '''def get_object(self, part_id):
         try:
             return Part.objects.get(part_id=part_id)
         except Part.DoesNotExist:
-            raise NotFound("Part not found")
+            raise NotFound("Part not found")'''
 
     def get(self, request, part_id):
         part = self.get_object(part_id)
