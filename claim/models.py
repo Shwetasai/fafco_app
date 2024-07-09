@@ -42,7 +42,7 @@ class Claim(models.Model):
     csr_note = models.TextField(null=True, blank=True)
     user_note = models.TextField(null=True, blank=True)
     dealer_ref_number = models.CharField(max_length=100, null=True, blank=True)
-    date_installed = models.DateField()
+    date_installed = models.DateField(null=True, blank=True)
     barcode = models.CharField(max_length=15, default='', null=True, blank=True)    
     active = models.BooleanField(default=True)
     claim_action = models.PositiveSmallIntegerField(choices=CLAIM_ACTION, blank=True, null=True)

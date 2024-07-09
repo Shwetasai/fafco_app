@@ -23,15 +23,13 @@ class ClaimListCreateAPIView(APIView):
 
 class ClaimRetrieveUpdateAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
-
+    
     def get(self, request, pk, *args, **kwargs):
-        claim = self.get_object(pk)
-        serializer = ClaimSerializer(claim)
+        serializer = ClaimSerializer(get_object_or_404(Claim, pk=pk, dealer=self.request.user))
         return Response(serializer.data)
 
     def put(self, request, pk, *args, **kwargs):
-        claim = self.get_object(pk)
+        claim = get_object_or_404(Claim, pk=pk, dealer=self.request.user)
         serializer = ClaimSerializer(claim, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -39,15 +37,12 @@ class ClaimRetrieveUpdateAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, *args, **kwargs):
-        claim = self.get_object(pk)
-        claim.delete()
+        get_object_or_404(Claim, pk=pk, dealer=self.request.user).delete()
         return Response({"message": "Claim deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 class ClaimDocumentUploadAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    def get_claim(self, claim_pk):
-        return get_object_or_404(Claim, pk=claim_pk, dealer=self.request.user)
 
     def post(self, request, pk, *args, **kwargs):
         claim = get_object_or_404(Claim, pk=pk, dealer=request.user)
@@ -59,15 +54,15 @@ class ClaimDocumentUploadAPIView(APIView):
 
     def get(self, request, pk, doc_pk=None, *args, **kwargs):
         if doc_pk:
-            document = self.get_document(pk, doc_pk)
+            document = get_object_or_404(ClaimDocument, pk=doc_pk, claim__pk=pk, claim__dealer=request.user)
             serializer = ClaimDocumentSerializer(document)
         else:
-            documents = ClaimDocument.objects.filter(pk=pk, claim__dealer=request.user)
+            documents = ClaimDocument.objects.filter(claim__pk=pk, claim__dealer=request.user)
             serializer = ClaimDocumentSerializer(documents, many=True)
         return Response(serializer.data)
 
     def put(self, request, pk, doc_pk, *args, **kwargs):
-        document = self.get_document(pk, doc_pk)
+        document = get_object_or_404(ClaimDocument, pk=doc_pk, claim__pk=pk, claim__dealer=request.user)
         serializer = ClaimDocumentSerializer(document, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -75,6 +70,6 @@ class ClaimDocumentUploadAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, doc_pk, *args, **kwargs):
-        document = self.get_document(pk, doc_pk)
+        document = get_object_or_404(ClaimDocument, pk=doc_pk, claim__pk=pk, claim__dealer=request.user)
         document.delete()
         return Response({"message": "Document deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
