@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 load_dotenv()
-BASE_URL = 'http://127.0.0.1:8000/'
+BASE_URL = os.getenv('BASE_URL', 'http://127.0.0.1:8000/')
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-s45&g*2u&!)tp)1ec1eyn%h-9!)5xb1djk42aokgr)a%e&e^h3')
 DEBUG = os.getenv('DEBUG', True)
